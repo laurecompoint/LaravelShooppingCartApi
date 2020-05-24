@@ -22,5 +22,5 @@ Route::apiResource('/cart', 'CartController')->only([
 ]);
 Route::apiResource('/products', 'ProductController');
 
-Route::middleware('api')->delete('/cart/{id}', 'CartController@delete');
+Route::middleware('api')->delete('/cart/{product_id}', 'CartController@delete');
 Route::middleware('api')->delete('/cart', 'CartController@destroy');

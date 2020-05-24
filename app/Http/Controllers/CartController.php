@@ -16,7 +16,7 @@ class CartController extends Controller
     public function index(Cart $cart)
     {
 
-       return $usersArticles = Cart::with('Product')->get();
+        return  $cart->with('Product')->get();
     }
 
     /**
@@ -48,12 +48,12 @@ class CartController extends Controller
             return $errors->toJson();
         }
         else{
-            if(Cart::where('product_id', '=', $request->product_id)->exists()){
+           if(Cart::where('product_id', '=', $request->product_id)->exists()){
 
-                $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
-                return $cart->with('Product')->where('product_id', $request->product_id)->get();
+              $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
+              return $cart->with('Product')->where('product_id', $request->product_id)->get();
 
-            }else{
+             }else{
                 $cart = new Cart;
                 $cart->quantity = 1;
                 if (Product::where('id', '=', $request->product_id)->exists()) {
@@ -64,8 +64,8 @@ class CartController extends Controller
                 }
                 $cart->save();
               
-                return $cart->with('Product')->where('product_id', $request->product_id)->get();
-            }
+                return $cart->select('quantity' , 'product_id')->where('product_id', $request->product_id)->with('Product')->get();
+           }
            
         }
        
@@ -114,21 +114,24 @@ class CartController extends Controller
     public function destroy(cart $cart)
     {
 
-       Cart::whereNotNull('id')->delete();
-       $deleteall = 'HTTP 200';
-       return $deleteall;
+      return Cart::whereNotNull('id')->delete();
+    //   $deleteall = 'HTTP 200';
+     //  return $deleteall;
     }
 
     public function delete(Cart $cart, Request $request)
     {
-       if(Cart::where('product_id', '=', $request->id)->exists()){
-        Cart::where('product_id', '=', $request->id)->delete();
+        
+       if(Cart::where('product_id', '=', $request->product_id)->exists()){
+        Cart::where('product_id', '=', $request->product_id)->delete();
         $deleteone = 'HTTP 200';
         return $deleteone;
        
        }else{
+        header('Content-Type: application/json; charset: UTF-8');
+        $str = '[{"code": "401", "message": "not found"}]';
         $ok = 'HTTP 404';
-        return $ok;
+        return $str;
        }
       
        
