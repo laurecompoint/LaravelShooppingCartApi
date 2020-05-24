@@ -114,9 +114,9 @@ class CartController extends Controller
     public function destroy(cart $cart)
     {
 
-      return Cart::whereNotNull('id')->delete();
-    //   $deleteall = 'HTTP 200';
-     //  return $deleteall;
+      Cart::whereNotNull('id')->delete();
+     $deleteall = 'HTTP 200';
+     return $deleteall;
     }
 
     public function delete(Cart $cart, Request $request)
