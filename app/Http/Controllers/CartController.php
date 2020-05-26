@@ -128,10 +128,9 @@ class CartController extends Controller
         return $deleteone;
        
        }else{
-        header('Content-Type: application/json; charset: UTF-8');
-        $str = '[{"code": "401", "message": "not found"}]';
-        $ok = 'HTTP 404';
-        return $str;
+       
+        $error = 'HTTP 404';
+        return $error;
        }
       
        
