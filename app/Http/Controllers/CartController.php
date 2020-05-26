@@ -48,12 +48,12 @@ class CartController extends Controller
             return $errors->toJson();
         }
         else{
-           if(Cart::where('product_id', '=', $request->product_id)->exists()){
+         //  if(Cart::where('product_id', '=', $request->product_id)->exists()){
 
-              $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
-              return $cart->with('Product')->where('product_id', $request->product_id)->get();
+           //   $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
+           //   return $cart->with('Product')->where('product_id', $request->product_id)->get();
 
-             }else{
+           //  }else{
                 $cart = new Cart;
                 $cart->quantity = 1;
                 if (Product::where('id', '=', $request->product_id)->exists()) {
@@ -65,7 +65,7 @@ class CartController extends Controller
                 $cart->save();
               
                 return $cart->select('quantity' , 'product_id')->where('product_id', $request->product_id)->with('Product')->get();
-           }
+         //  }
            
         }
        
