@@ -36,23 +36,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required'
-        ]);
-         
-       
         
-                $product = new Product;
-                $product->id = $request->id;
-                $product->name = $request->name;
-                $product->description = $request->description;
-                $product->price = $request->price;
-              
-                $product->save();
-              
-                return $product;
             
     }
 
