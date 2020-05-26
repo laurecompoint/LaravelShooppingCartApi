@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i < 6; $i++) {
             $product = new Cart;
             $product->quantity = $faker->numberBetween(1, 1);
-            $product->product_id = $faker->numberBetween(1, 5);
+            $product->product_id = $i;
             $product->save();
         }
     }
