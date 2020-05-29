@@ -54,17 +54,19 @@ class CartController extends Controller
            //   return $cart->with('Product')->where('product_id', $request->product_id)->get();
 
            //  }else{
-                $cart = new Cart;
-                $cart->quantity = 1;
+               
                 if (Product::where('id', '=', $request->product_id)->exists()) {
+                    $cart = new Cart;
+                    $cart->quantity = 1;
                     $cart->product_id = $request->product_id;
+                    $cart->save();
+                    return $cart->select('quantity' , 'product_id')->where('product_id', $request->product_id)->with('Product')->get();
                 }else{
-                    $errors = 'HTTP 404';
-                    return $errors;
+                    return response(null, 404);
                 }
-                $cart->save();
               
-                return $cart->select('quantity' , 'product_id')->where('product_id', $request->product_id)->with('Product')->get();
+              
+               
          //  }
            
         }
@@ -115,8 +117,7 @@ class CartController extends Controller
     {
 
       Cart::whereNotNull('id')->delete();
-     $deleteall = 'HTTP 200';
-     return $deleteall;
+      return response(null, 200);
     }
 
     public function delete(Cart $cart, Request $request)
@@ -124,13 +125,11 @@ class CartController extends Controller
         
        if(Cart::where('product_id', '=', $request->product_id)->exists()){
         Cart::where('product_id', '=', $request->product_id)->delete();
-        $deleteone = 'HTTP 200';
-        return $deleteone;
+        return response(null, 200);
        
        }else{
        
-        $error = 'HTTP 404';
-        return $error;
+        return response(null, 404);
        }
       
        
