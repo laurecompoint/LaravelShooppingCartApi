@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\cart;
-use App\product;
+use App\Cart;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class CartController extends Controller
@@ -16,7 +16,8 @@ class CartController extends Controller
     public function index(Cart $cart)
     {
 
-        return  $cart->with('Product')->get();
+       return $cart->with('Product')->get();
+       
     }
 
     /**
@@ -45,29 +46,40 @@ class CartController extends Controller
            
             $errors = $validator->errors();
 
-            return $errors->toJson();
+            //return $errors->toJson();
+            return response(null, 422);
+            
         }
         else{
-         //  if(Cart::where('product_id', '=', $request->product_id)->exists()){
-
-           //   $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
-           //   return $cart->with('Product')->where('product_id', $request->product_id)->get();
-
-           //  }else{
+         
                
                 if (Product::where('id', '=', $request->product_id)->exists()) {
                     $cart = new Cart;
-                    $cart->quantity = 1;
+                    if(Cart::where('product_id', '=', $request->product_id)->exists()){
+
+                        $cart->where('product_id', $cart->product_id = $request->product_id)->increment('quantity' , 1 );
+                       
+         
+                     }
+                     else{
+                        $cart->quantity = 1;
+                     }
+                   
                     $cart->product_id = $request->product_id;
                     $cart->save();
-                    return $cart->select('quantity' , 'product_id')->where('product_id', $request->product_id)->with('Product')->get();
-                }else{
-                    return response(null, 404);
-                }
-              
+                    return $cart->with('product')->select( 'product_id', 'quantity')->get();  
+
+                    }else{
+                       return response(null, 404);
+                    }
+
+
+                
               
                
-         //  }
+              
+               
+           
            
         }
        
@@ -115,16 +127,18 @@ class CartController extends Controller
      */
     public function destroy(cart $cart)
     {
-
-      Cart::whereNotNull('id')->delete();
-      return response(null, 200);
+       // Cart::truncate();
+        Cart::whereNotNull('id')->delete();
+       return response('http 200', 200);
+    
+       
     }
 
     public function delete(Cart $cart, Request $request)
     {
-        
        if(Cart::where('product_id', '=', $request->product_id)->exists()){
         Cart::where('product_id', '=', $request->product_id)->delete();
+      
         return response(null, 200);
        
        }else{
